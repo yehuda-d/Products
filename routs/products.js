@@ -2,6 +2,7 @@ const express = require('express');//ייבוא ספריית אקספרס
 const router = express.Router();
 const multer = require('multer');//ספרייה שנותנת להעלות קבצים
 const fs = require('fs');//ספרייה שנותנת לערוך קבצים
+const path = require('path');
 
 const products = [];
 let nextID = 1;
@@ -40,6 +41,43 @@ router.post('/',uplode.single('myFile'),(req,res)=>{
     products[id] = product;
      res.status(201).json({message:"ok"})
 
+})
+
+router.delete('/:id',(req,res)=>{
+
+    //ולידציה
+    let id = Number(req.params.id);
+    if(isNaN(id)){
+        return res.json({message:"לא חוקי"})
+    }
+    let product = products[id];
+    if(!product){
+        return res.json("לא קיים")
+    }
+
+    if(product.filename){
+        if(fs.existsSync(path.join('uploads',product.filename))){
+            fs.unlinkSync(path.join('uploads',product.filename))
+        }
+    }
+    products[id] = null;
+    res.json({message:"ok"});
+
+})
+
+
+
+router.get('/:id',(req,res)=>{
+    //ולידציה
+    let id = Number(req.params.id);
+    if(isNaN(id)){
+        return res.json({message:"לא חוקי"})
+    }
+    let product = products[id];
+    if(!product){
+        return res.json("לא קיים")
+    }
+    res.json(product);
 })
 
 //מייצא
