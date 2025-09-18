@@ -34,7 +34,7 @@ router.post('/',uplode.single('myFile'),(req,res)=>{
         return res.status(400).json({message:"not valid"})       
     }
     let id = nextID++;
-    let price = req.body.price;
+    let price = parseFloat(req.body.price);
     let filename = req.file ? req.file.filename : null;
     let product = {id,name,price:parseFloat(price),filename};
     products[id] = product;
