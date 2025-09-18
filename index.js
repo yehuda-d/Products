@@ -5,6 +5,7 @@ const app = express();
 const port = 3500;
 app.use(express.static(path.join(__dirname,'public')));
 app.use(express.static((__dirname)));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // app.use(express.json());
 
