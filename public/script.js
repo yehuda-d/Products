@@ -20,7 +20,7 @@ function createGrid(data){
             txt+=
             `<div class="card">
                     <div>
-                    <img src="../uploads/${obj.filename}" alt="${obj.name}">
+                    <img src="../uploads/${obj.filename}?t=${Date.now()}" alt="${obj.name}">
                     <p>${obj.name}</p>
                     <div>${obj.price}</div>
                 </div>
@@ -57,18 +57,21 @@ async function addProduct(){
 }
 
 function clearInputs(){
-    // document.getElementById("id").value = "";
+    document.getElementById("id").value = "";
     document.getElementById("name").value = "";
     document.getElementById("price").value = "";
     document.getElementById("myFile").value = "";
+    document.getElementById("myImage").src = "";
 }
 
 async function deleteProduct(id) {
     try {
-        await fetch(`/products/${id}`,{
-            method: 'DELETE'
-    })
-    getData();
+        if(confirm('האם אתה בטוח שברצומך למחוק?')){
+            await fetch(`/products/${id}`,{
+                method: 'DELETE'
+        })
+        getData();
+        }
     } catch (err) {
         alert(err)
     }
@@ -87,9 +90,36 @@ async function getById(id) {
    } 
 }
 
+async function editProduct(id) {
+    try {
+        let name = document.getElementById("name").value;
+        let price = document.getElementById("price").value;
+        let myFile = document.getElementById("myFile").files[0];
+        let formData = new FormData();
+        formData.append('name',name);
+        formData.append('price',price);
+        if(myFile){
+            formData.append('myFile',myFile);
+        }
+        await fetch(`/products/${id}`,{
+            method: 'PATCH',
+            body: formData
+        })
+        getData();
+        clearInputs();
+    } catch (err) {
+        alert(err);
+    }
+}
 
-
-
+function addOrEdit(){
+    let id = document.getElementById('id').value;
+    if(id){
+        editProduct(id);
+    }else{
+        addProduct();
+    }
+}
 
 
 getData();
