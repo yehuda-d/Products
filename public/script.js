@@ -26,7 +26,7 @@ function createGrid(data){
                 </div>
                 <div>
                     <button onclick="deleteProduct(${obj.id})">Delete</button>
-                    <button>Edit</button>
+                    <button onclick="getById(${obj.id})">Edit</button>
                 </div>
             </div>`
         }
@@ -72,6 +72,19 @@ async function deleteProduct(id) {
     } catch (err) {
         alert(err)
     }
+}
+
+async function getById(id) {
+   try {
+    let response = await fetch(`/products/${id}`);
+    let obj = await response.json();
+    document.getElementById('id').value = obj.id;
+    document.getElementById('name').value = obj.name;
+    document.getElementById('price').value = obj.price;
+    document.getElementById('myImage').src = "../uploads/" + obj.filename;
+   } catch (err) {
+    alert(err);
+   } 
 }
 
 
