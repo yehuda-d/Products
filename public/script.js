@@ -20,12 +20,12 @@ function createGrid(data){
             txt+=
             `<div class="card">
                     <div>
-                    <img src="/uploads/${obj.filename}" alt="${obj.name}">
+                    <img src="../uploads/${obj.filename}" alt="${obj.name}">
                     <p>${obj.name}</p>
                     <div>${obj.price}</div>
                 </div>
                 <div>
-                    <button>Delete</button>
+                    <button onclick="deleteProduct(${obj.id})">Delete</button>
                     <button>Edit</button>
                 </div>
             </div>`
@@ -50,8 +50,27 @@ async function addProduct(){
             body:formData
         })
         getData();
+        clearInputs();
     } catch (err) {
         alert(err);
+    }
+}
+
+function clearInputs(){
+    // document.getElementById("id").value = "";
+    document.getElementById("name").value = "";
+    document.getElementById("price").value = "";
+    document.getElementById("myFile").value = "";
+}
+
+async function deleteProduct(id) {
+    try {
+        await fetch(`/products/${id}`,{
+            method: 'DELETE'
+    })
+    getData();
+    } catch (err) {
+        alert(err)
     }
 }
 
